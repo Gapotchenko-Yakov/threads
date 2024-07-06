@@ -5,8 +5,6 @@ import Link from "next/link";
 import React from "react";
 
 const Topbar = () => {
-  const isUserLoggedIn = true;
-
   return (
     <nav className="topbar">
       <Link href="/" className="flex items-center gap-4">
