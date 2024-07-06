@@ -61,7 +61,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
       >
         <FormField
           control={form.control}
-          name="username"
+          name="profile_photo"
           render={({ field }) => (
             <FormItem className="flex items-center gap-4">
               <FormLabel className="account-form_image-label">
@@ -108,7 +108,11 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
                 Name
               </FormLabel>
               <FormControl className="flex-1 text-base-semibold text-gray-200">
-                <Input className="account-form_input no-focus" {...field} />
+                <Input
+                  type="text"
+                  className="account-form_input no-focus"
+                  {...field}
+                />
               </FormControl>
 
               <FormMessage />
@@ -125,7 +129,11 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
                 Username
               </FormLabel>
               <FormControl className="flex-1 text-base-semibold text-gray-200">
-                <Input className="account-form_input no-focus" {...field} />
+                <Input
+                  type="text"
+                  className="account-form_input no-focus"
+                  {...field}
+                />
               </FormControl>
 
               <FormMessage />
