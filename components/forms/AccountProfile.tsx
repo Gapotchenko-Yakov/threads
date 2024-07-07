@@ -35,10 +35,10 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
   const form = useForm<z.infer<typeof UserValidationSchema>>({
     resolver: zodResolver(UserValidationSchema),
     defaultValues: {
-      profile_photo: "",
-      name: "",
-      username: "",
-      bio: "",
+      profile_photo: user?.image || "",
+      name: user?.name || "",
+      username: user?.username || "",
+      bio: user?.bio || "",
     },
   });
 
