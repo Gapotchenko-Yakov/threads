@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: "A Next.js 14 Meta Threads Application",
 };
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
