@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import { Textarea } from "../ui/textarea";
+import { isBase64Image } from "@/lib/utils";
 
 interface Props {
   user: {
@@ -70,7 +71,9 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
   };
 
   function onSubmit(values: z.infer<typeof UserValidationSchema>) {
-    console.log(values);
+    const blob = values.profile_photo;
+
+    const hasImageChanged = isBase64Image(blob);
   }
 
   return (
