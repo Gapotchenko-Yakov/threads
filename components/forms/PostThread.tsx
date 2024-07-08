@@ -19,6 +19,7 @@ import { ChangeEvent, useState } from "react";
 import { Textarea } from "../ui/textarea";
 
 import { usePathname, useRouter } from "next/navigation";
+import { ThreadValidationSchema } from "@/lib/validations/thread";
 
 interface Props {
   user: {
