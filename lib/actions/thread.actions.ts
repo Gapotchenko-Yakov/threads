@@ -13,19 +13,21 @@ interface Props {
 }
 
 export async function createThread({ text, author, communityId, path }: Props) {
-  connectToDB();
+  try {
+    connectToDB();
 
-  const createdThread = await Thread.create({
-    text,
-    author,
-    community: null,
-  });
+    const createdThread = await Thread.create({
+      text,
+      author,
+      community: null,
+    });
 
-  await User.findByIdAndUpdate(author, {
-    $push: { threads: createdThread._id },
-  });
+    await User.findByIdAndUpdate(author, {
+      $push: { threads: createdThread._id },
+    });
 
-  revalidatePath(path);
-
-  return createdThread;
+    revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`Error creating thread: ${error.message}`);
+  }
 }
