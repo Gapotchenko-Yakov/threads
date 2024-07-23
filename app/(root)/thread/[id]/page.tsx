@@ -1,15 +1,15 @@
 import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs";
 
+import Comment from "@/components/forms/Comment";
 import ThreadCard from "@/components/cards/ThreadCard";
 
 import { fetchUser } from "@/lib/actions/user.actions";
 import { fetchThreadById } from "@/lib/actions/thread.actions";
-import Comment from "@/components/forms/Comment";
 
 export const revalidate = 0;
 
-async function Page({ params }: { params: { id: string } }) {
+async function page({ params }: { params: { id: string } }) {
   if (!params.id) return null;
 
   const user = await currentUser();
@@ -42,8 +42,25 @@ async function Page({ params }: { params: { id: string } }) {
           currentUserId={JSON.stringify(userInfo._id)}
         />
       </div>
+
+      <div className="mt-10">
+        {thread.children.map((childItem: any) => (
+          <ThreadCard
+            key={childItem._id}
+            id={childItem._id}
+            currentUserId={user.id}
+            parentId={childItem.parentId}
+            content={childItem.text}
+            author={childItem.author}
+            community={childItem.community}
+            createdAt={childItem.createdAt}
+            comments={childItem.children}
+            isComment
+          />
+        ))}
+      </div>
     </section>
   );
 }
 
-export default Page;
+export default page;
