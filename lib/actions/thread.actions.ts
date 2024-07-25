@@ -37,22 +37,26 @@ export async function createThread({ text, author, communityId, path }: Props) {
 export async function fetchPosts(pageNumber = 1, pageSize = 20) {
   connectToDB();
 
-  const skipAmmount = (pageNumber - 1) * pageSize;
+  const skipAmount = (pageNumber - 1) * pageSize;
 
-  // fetch top-level threads (posts without parents)
-  const postsQuery = Thread.find({
-    parentId: { $in: [null, undefined] },
-  })
+  const postsQuery = Thread.find({ parentId: { $in: [null, undefined] } })
     .sort({ createdAt: "desc" })
-    .skip(skipAmmount)
+    .skip(skipAmount)
     .limit(pageSize)
-    .populate({ path: "author", model: User })
     .populate({
-      path: "children",
+      path: "author",
+      model: User,
+    })
+    .populate({
+      path: "community",
+      model: Community,
+    })
+    .populate({
+      path: "children", // Populate the children field
       populate: {
-        path: "author",
+        path: "author", // Populate the author field within children
         model: User,
-        select: "_id name parentId image",
+        select: "_id name parentId image", // Select only _id and username fields of the author
       },
     });
 
@@ -62,7 +66,7 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
 
   const posts = await postsQuery.exec();
 
-  const isNext = totalPostsCount > skipAmmount + posts.length;
+  const isNext = totalPostsCount > skipAmount + posts.length;
 
   return { posts, isNext };
 }
