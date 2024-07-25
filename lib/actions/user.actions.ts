@@ -1,11 +1,26 @@
 "use server";
 
+import { FilterQuery, SortOrder } from "mongoose";
 import { revalidatePath } from "next/cache";
-import User from "../models/user.model";
-import { connectToDB } from "../mongoose";
+
 import Community from "../models/community.model";
 import Thread from "../models/thread.model";
-import { FilterQuery, SortOrder } from "mongoose";
+import User from "../models/user.model";
+
+import { connectToDB } from "../mongoose";
+
+export async function fetchUser(userId: string) {
+  try {
+    connectToDB();
+
+    return await User.findOne({ id: userId }).populate({
+      path: "communities",
+      model: Community,
+    });
+  } catch (error: any) {
+    throw new Error(`Failed to fetch user: ${error.message}`);
+  }
+}
 
 interface Params {
   userId: string;
@@ -18,15 +33,15 @@ interface Params {
 
 export async function updateUser({
   userId,
-  username,
-  name,
   bio,
-  image,
+  name,
   path,
+  username,
+  image,
 }: Params): Promise<void> {
-  connectToDB();
-
   try {
+    connectToDB();
+
     await User.findOneAndUpdate(
       { id: userId },
       {
@@ -34,7 +49,6 @@ export async function updateUser({
         name,
         bio,
         image,
-        path,
         onboarded: true,
       },
       { upsert: true }
@@ -44,20 +58,7 @@ export async function updateUser({
       revalidatePath(path);
     }
   } catch (error: any) {
-    console.log(`Failed to create/update user: ${error.message}`);
-  }
-}
-
-export async function fetchUser(userId: string) {
-  try {
-    connectToDB();
-
-    return await User.findOne({ id: userId }).populate({
-      path: "communities",
-      model: Community,
-    });
-  } catch (error: any) {
-    throw new Error(`Failed to fetch user: ${error.message}`);
+    throw new Error(`Failed to create/update user: ${error.message}`);
   }
 }
 
@@ -116,8 +117,7 @@ export async function fetchUsers({
 
     // Create an initial query object to filter users.
     const query: FilterQuery<typeof User> = {
-      // TODO: restore $ne requirement
-      // id: { $ne: userId }, // Exclude the current user from the results.
+      id: { $ne: userId }, // Exclude the current user from the results.
     };
 
     // If the search string is not empty, add the $or operator to match either username or name fields.
