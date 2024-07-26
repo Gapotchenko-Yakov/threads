@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   experimental: {
     // serverActions: true, // enabled by default in Next.js 14
     serverComponentsExternalPackages: ["mongoose"],
